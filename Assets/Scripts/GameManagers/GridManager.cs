@@ -20,7 +20,6 @@ namespace DungeonBrickStudios
         }
         public bool PositionIsWalkable(Vector3 pos)
         {
-            Debug.Log("Is the pos valid? " + grid.NodeFromWorldPoint(pos).walkable);
             return grid.NodeFromWorldPoint(pos).walkable;
         }
         public void SetGridPositionWalkable(Vector3 pos, bool walkable)

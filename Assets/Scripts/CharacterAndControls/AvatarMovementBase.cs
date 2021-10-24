@@ -14,5 +14,10 @@ namespace DungeonBrickStudios
         {
             isMoving = new EventVariable<AvatarMovementBase, bool>(this, false);
         }
+
+        protected virtual void Start()
+        {
+            GridManager.Instance.SetGridPositionWalkable(transform.position, false);
+        }
     }
 }

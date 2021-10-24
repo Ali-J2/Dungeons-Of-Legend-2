@@ -17,8 +17,9 @@ namespace DungeonBrickStudios
         private float moveSpeed;
         private float turnSpeed;
 
-        private void Start()
+        protected override void Start()
         {
+            base.Start();
             floorLayerMask = LayerMask.GetMask("Floor");
 
             moveSpeed = stepDistance / moveTime;
