@@ -7,6 +7,7 @@ namespace DungeonBrickStudios
 	{
 
 		[SerializeField] private LayerMask unwalkableMask;
+		[SerializeField] private LayerMask environmentMask;
 		[SerializeField] private Vector2 gridWorldSize;
 		[SerializeField] private float nodeRadius;
 		[SerializeField] private Node[,] grid;
@@ -74,6 +75,30 @@ namespace DungeonBrickStudios
 				return false;
 			else
 				return grid[x, y].walkable;
+		}
+
+		public void RefreshGrid()
+        {
+			Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y / 2;
+
+			for (int x = 0; x < gridSizeX; x++)
+			{
+				for (int y = 0; y < gridSizeY; y++)
+				{
+					Vector3 gridPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
+					Vector3 floorPoint = GetWorldPointAtFloorHeight(gridPoint);
+					bool walkable = !(Physics.CheckSphere(floorPoint, nodeRadius - 0.1f, environmentMask));
+
+					grid[x, y].flatGridPosition = gridPoint;
+					grid[x, y].actualPositionOnFloor = floorPoint;
+
+					// If Node is unwalkable for whatever reason already, do nothing. Otherwise update it with the new environment data
+					if (!grid[x, y].walkable)
+						return;
+
+					grid[x, y].walkable = walkable;
+				}
+			}
 		}
 
 		void OnDrawGizmos()

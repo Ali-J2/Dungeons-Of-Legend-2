@@ -1,16 +1,15 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SheetCodes;
 using UnityEngine.SceneManagement;
-using System.Linq;
 
 namespace DungeonBrickStudios
 {
     public class GameSceneManager : MonoBehaviour
     {
         public static GameSceneManager instance { get; private set; }
+
         [SerializeField] private List<SceneIdentifier> scenesToLoadOnStart;
         private List<SceneIdentifier> currentlyLoadedScenes;
 
