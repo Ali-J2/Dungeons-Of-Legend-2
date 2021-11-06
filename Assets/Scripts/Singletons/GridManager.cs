@@ -7,11 +7,11 @@ namespace DungeonBrickStudios
     public class GridManager : MonoBehaviour
     {
         [SerializeField] Grid grid;
-        public static GridManager Instance { get; private set; }
+        public static GridManager instance { get; private set; }
 
         private void Awake()
         {
-            Instance = this;
+            instance = this;
         }
 
         public Vector3 GetFloorPosition(Vector3 objectPosition)

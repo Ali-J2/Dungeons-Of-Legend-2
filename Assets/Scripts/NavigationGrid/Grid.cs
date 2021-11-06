@@ -17,7 +17,7 @@ namespace DungeonBrickStudios
 		private LayerMask layerMask;
 
 		// Use this for initialization
-		void Start()
+		private void Start()
 		{
 			nodeDiameter = nodeRadius * 2f;
 			gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);

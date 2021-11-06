@@ -51,8 +51,8 @@ namespace DungeonBrickStudios
 
             isMoving.value = true;
 
-            GridManager.Instance.SetGridPositionWalkable(transform.position, true);
-            GridManager.Instance.SetGridPositionWalkable(targetPosition, false);
+            GridManager.instance.SetGridPositionWalkable(transform.position, true);
+            GridManager.instance.SetGridPositionWalkable(targetPosition, false);
         }
 
         public void HandleRotation(bool left)
@@ -112,7 +112,7 @@ namespace DungeonBrickStudios
 
         private bool TargetPositionValid()
         {
-            if (!GridManager.Instance.PositionIsWalkable(targetPosition))
+            if (!GridManager.instance.PositionIsWalkable(targetPosition))
                 return false;
 
             return true;

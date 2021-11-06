@@ -17,7 +17,7 @@ namespace DungeonBrickStudios
 
         protected virtual void Start()
         {
-            GridManager.Instance.SetGridPositionWalkable(transform.position, false);
+            GridManager.instance.SetGridPositionWalkable(transform.position, false);
         }
     }
 }
