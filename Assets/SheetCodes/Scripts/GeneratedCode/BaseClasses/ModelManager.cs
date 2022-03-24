@@ -45,6 +45,25 @@ namespace SheetCodes
                         }
                         break;
                     }
+                case DatasheetType.Avatar:
+                    {
+                        if (avatarModel == null || avatarModel.Equals(null))
+                        {
+                            Log(string.Format("Sheet Codes: Trying to unload model {0}. Model is not loaded.", datasheetType));
+                            break;
+                        }
+                        Resources.UnloadAsset(avatarModel);
+                        avatarModel = null;
+                        LoadRequest request;
+                        if (loadRequests.TryGetValue(DatasheetType.Avatar, out request))
+                        {
+                            loadRequests.Remove(DatasheetType.Avatar);
+                            request.resourceRequest.completed -= OnLoadCompleted_AvatarModel;
+							foreach (Action<bool> callback in request.callbacks)
+								callback(false);
+                        }
+                        break;
+                    }
                 default:
                     break;
             }
@@ -69,6 +88,26 @@ namespace SheetCodes
                             Log(string.Format("Sheet Codes: Trying to initialize {0} while also async loading. Async load has been canceled.", datasheetType));
                             loadRequests.Remove(DatasheetType.Scene);
                             request.resourceRequest.completed -= OnLoadCompleted_SceneModel;
+							foreach (Action<bool> callback in request.callbacks)
+								callback(true);
+                        }
+                        break;
+                    }
+                case DatasheetType.Avatar:
+                    {
+                        if (avatarModel != null && !avatarModel.Equals(null))
+                        {
+                            Log(string.Format("Sheet Codes: Trying to Initialize {0}. Model is already initialized.", datasheetType));
+                            break;
+                        }
+
+                        avatarModel = Resources.Load<AvatarModel>("ScriptableObjects/Avatar");
+                        LoadRequest request;
+                        if (loadRequests.TryGetValue(DatasheetType.Avatar, out request))
+                        {
+                            Log(string.Format("Sheet Codes: Trying to initialize {0} while also async loading. Async load has been canceled.", datasheetType));
+                            loadRequests.Remove(DatasheetType.Avatar);
+                            request.resourceRequest.completed -= OnLoadCompleted_AvatarModel;
 							foreach (Action<bool> callback in request.callbacks)
 								callback(true);
                         }
@@ -101,6 +140,24 @@ namespace SheetCodes
                         request.completed += OnLoadCompleted_SceneModel;
                         break;
                     }
+                case DatasheetType.Avatar:
+                    {
+                        if (avatarModel != null && !avatarModel.Equals(null))
+                        {
+                            Log(string.Format("Sheet Codes: Trying to InitializeAsync {0}. Model is already initialized.", datasheetType));
+                            callback(true);
+                            break;
+                        }
+                        if(loadRequests.ContainsKey(DatasheetType.Avatar))
+                        {
+                            loadRequests[DatasheetType.Avatar].callbacks.Add(callback);
+                            break;
+                        }
+                        ResourceRequest request = Resources.LoadAsync<AvatarModel>("ScriptableObjects/Avatar");
+                        loadRequests.Add(DatasheetType.Avatar, new LoadRequest(request, callback));
+                        request.completed += OnLoadCompleted_AvatarModel;
+                        break;
+                    }
                 default:
                     break;
             }
@@ -125,6 +182,27 @@ namespace SheetCodes
                     Initialize(DatasheetType.Scene);
 
                 return sceneModel;
+            }
+        }
+        private static void OnLoadCompleted_AvatarModel(AsyncOperation operation)
+        {
+            LoadRequest request = loadRequests[DatasheetType.Avatar];
+            avatarModel = request.resourceRequest.asset as AvatarModel;
+            loadRequests.Remove(DatasheetType.Avatar);
+            operation.completed -= OnLoadCompleted_AvatarModel;
+            foreach (Action<bool> callback in request.callbacks)
+                callback(true);
+        }
+
+		private static AvatarModel avatarModel = default;
+		public static AvatarModel AvatarModel
+        {
+            get
+            {
+                if (avatarModel == null)
+                    Initialize(DatasheetType.Avatar);
+
+                return avatarModel;
             }
         }
 		

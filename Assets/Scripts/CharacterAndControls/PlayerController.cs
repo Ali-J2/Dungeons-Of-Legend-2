@@ -2,18 +2,17 @@
 
 using System;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
 namespace DungeonBrickStudios
 {
     [RequireComponent(typeof(PlayerInput))]
-    [RequireComponent(typeof(PlayerMovement))]
-    public class PlayerActions : MonoBehaviour
+    [RequireComponent(typeof(AvatarMovement))]
+    public class PlayerController : MonoBehaviour
     {
-        public event Action onPlayerTurnFinish;
-
-        private PlayerMovement playerMovement;
+        private AvatarMovement playerMovement;
 
         private bool forwardPressed;
         private bool backwardPressed;
@@ -24,7 +23,7 @@ namespace DungeonBrickStudios
 
         private void Awake()
         {
-            playerMovement = this.GetComponent<PlayerMovement>();
+            playerMovement = this.GetComponent<AvatarMovement>();
         }
 
         private void FixedUpdate()

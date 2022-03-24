@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace DungeonBrickStudios
 {
-    public class PlayerMovement : AvatarMovementBase
+    public class AvatarMovement : AvatarMovementBase
     {
         private const float ROTATION_DEGREES = 90f;
 
@@ -33,7 +33,7 @@ namespace DungeonBrickStudios
         private void Update()
         {
             MovePlayer();
-            RotatePlayer();
+            RotatePlayer(); 
         }
 
         public void HandleMovement(Vector3 moveDirection)
